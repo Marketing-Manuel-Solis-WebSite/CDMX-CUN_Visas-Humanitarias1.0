@@ -275,7 +275,7 @@ const SuccessStep = () => (
               className="inline-block relative z-10"
           >
               <span className="relative block text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-[#FFF] to-[#B2904D] drop-shadow-[0_0_25px_rgba(178,144,77,0.5)] tracking-tighter">
-                  +1 73
+                  +1 713
               </span>
           </motion.div>
       </div>
@@ -308,7 +308,7 @@ const SuccessStep = () => (
               </p>
 
               <a 
-                  href="https://manuelsolisvisas.vercel.app" 
+                  href="https://testimonios-woad.vercel.app/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-full"
