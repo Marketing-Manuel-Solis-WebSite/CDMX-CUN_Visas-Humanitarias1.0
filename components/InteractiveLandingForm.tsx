@@ -31,7 +31,7 @@ interface FormData {
 const situationOptions = [
   { id: 'crime_victim', icon: ShieldCheck, text: 'Fui víctima de un delito en Estados Unidos' },
   { id: 'forced_labor', icon: Lock, text: 'Fui obligado(a) a trabajar o hacer algo contra mi voluntad' },
-  { id: 'domestic_abuse', icon: Heart, text: 'Sufrí abuso por parte de mi esposo(a), padre/madre o hijo(a) en EE.UU.' },
+  { id: 'domestic_abuse', icon: Heart, text: 'Sufrí abuso por parte de mi esposo(a), padre/madre o hijo(a) CIUDADANO O RESIDENTE en EE.UU.' },
   { id: 'minor_abuse', icon: Baby, text: 'Soy menor de 21 años y no puedo vivir con uno o ambos padres por abandono/abuso/negligencia' },
   { id: 'legal_options', icon: Gavel, text: 'Me gustaría conocer mis opciones legales' }
 ]
@@ -84,9 +84,9 @@ const FormStep = ({ formData, handleChange, handleNextStep, validateStep1 }: any
         <span className="text-[#B2904D] text-xs font-bold tracking-wider uppercase">Evaluación Gratuita</span>
       </motion.div>
       <h2 className="text-2xl md:text-3xl font-light text-white mb-2">
-        Arregle sin salir <span className="font-semibold text-[#B2904D]">su proceso Legal</span>
+        Arregle sin salir
       </h2>
-      <p className="text-blue-100/60 text-sm">Llena la solicitud para conocer si es precandidato</p>
+      <p className="text-blue-100/60 text-sm">Llena el formulario para mas información</p>
     </div>
 
     <div className="grid grid-cols-2 gap-3">
@@ -160,7 +160,7 @@ const LocationStep = ({ handleLocationResponse }: any) => (
     <div className="flex flex-col w-full gap-4">
       <motion.button onClick={() => handleLocationResponse(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 border border-emerald-500/30 text-white font-bold text-lg shadow-lg shadow-emerald-900/50 hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-2">
-        <CheckCircle2 size={20} /> SÍ, RESIDO AQUÍ
+        <CheckCircle2 size={20} /> SÍ
       </motion.button>
       <motion.button onClick={() => handleLocationResponse(false)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         className="w-full py-4 px-6 rounded-xl bg-[#000814]/60 border border-white/10 text-white/80 font-medium text-lg hover:bg-white/5 transition-all">
