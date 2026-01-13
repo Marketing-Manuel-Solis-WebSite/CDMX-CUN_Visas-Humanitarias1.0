@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 // Eliminamos import Image from 'next/image' para evitar conflictos en este entorno
 import { 
-  User, Phone, Mail, ShieldCheck, Zap, XCircle,
+  User, Phone, Mail, ShieldCheck,
   MapPin, Heart, ArrowRight, Sparkles, Check,
   PhoneIncoming, ExternalLink, Star, Gavel, Lock, Baby, CheckCircle2,
-  AlertTriangle
+  XCircle
 } from 'lucide-react'
 
 // --- CONSTANTES Y CONFIGURACIÓN ---
@@ -16,18 +16,19 @@ const API_URL = '/api/landing-contact'
 // Definimos los pasos del flujo
 type Step = 'form' | 'location' | 'questionnaire' | 'submitting' | 'success' | 'error' | 'disqualified'
 
+// CAMBIO: Todo a snake_case en la interfaz
 interface FormData {
   first_name: string
   last_name: string
   phone: string
   email: string
-  inUSA: boolean | null
-  specificSituation: string
-  acceptedTerms: boolean
-  marketingConsent: boolean
+  in_usa: boolean | null        // Antes: inUSA
+  specific_situation: string    // Antes: specificSituation
+  accepted_terms: boolean       // Antes: acceptedTerms
+  marketing_consent: boolean    // Antes: marketingConsent
 }
 
-// NUEVAS OPCIONES EXACTAS (A, B, C, D, E) - EDITADO: Se quitaron las letras A, B, C...
+// NUEVAS OPCIONES EXACTAS
 const situationOptions = [
   { id: 'crime_victim', icon: ShieldCheck, text: 'Fui víctima de un delito en Estados Unidos' },
   { id: 'forced_labor', icon: Lock, text: 'Fui obligado(a) a trabajar o hacer algo contra mi voluntad' },
@@ -102,9 +103,10 @@ const FormStep = ({ formData, handleChange, handleNextStep, validateStep1 }: any
     <div className="space-y-3 pt-2">
       <label className="flex items-start gap-3 p-3 rounded-xl bg-[#000814]/30 border border-white/5 cursor-pointer hover:bg-[#000814]/50 transition-colors group">
         <div className="relative flex-shrink-0 mt-0.5">
-          <input type="checkbox" name="acceptedTerms" checked={formData.acceptedTerms} onChange={handleChange} className="peer sr-only" />
+          {/* CAMBIO: name="accepted_terms" y checked={formData.accepted_terms} */}
+          <input type="checkbox" name="accepted_terms" checked={formData.accepted_terms} onChange={handleChange} className="peer sr-only" />
           <div className="w-5 h-5 rounded border-2 border-slate-600 peer-checked:border-[#B2904D] peer-checked:bg-[#B2904D] transition-all flex items-center justify-center group-hover:border-slate-500">
-            {formData.acceptedTerms && <Check size={12} className="text-[#001026]" strokeWidth={3} />}
+            {formData.accepted_terms && <Check size={12} className="text-[#001026]" strokeWidth={3} />}
           </div>
         </div>
         <span className="text-xs md:text-sm text-blue-100/70 leading-relaxed group-hover:text-blue-100/90 transition-colors">
@@ -114,12 +116,12 @@ const FormStep = ({ formData, handleChange, handleNextStep, validateStep1 }: any
 
       <label className="flex items-start gap-3 p-2 px-3 rounded-lg cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
         <div className="relative flex-shrink-0 mt-0.5">
-          <input type="checkbox" name="marketingConsent" checked={formData.marketingConsent} onChange={handleChange} className="peer sr-only" />
+          {/* CAMBIO: name="marketing_consent" y checked={formData.marketing_consent} */}
+          <input type="checkbox" name="marketing_consent" checked={formData.marketing_consent} onChange={handleChange} className="peer sr-only" />
           <div className="w-4 h-4 rounded border border-slate-700 peer-checked:border-[#B2904D] peer-checked:bg-[#B2904D] transition-all flex items-center justify-center">
-            {formData.marketingConsent && <Check size={10} className="text-[#001026]" strokeWidth={3} />}
+            {formData.marketing_consent && <Check size={10} className="text-[#001026]" strokeWidth={3} />}
           </div>
         </div>
-        {/* EDITADO: Tamaño de letra aumentado para mayor legibilidad */}
         <span className="text-xs md:text-sm text-blue-200/70 leading-relaxed">Deseo recibir actualizaciones del Law Office of Manuel Solís.</span>
       </label>
     </div>
@@ -188,7 +190,8 @@ const QuestionnaireStep = ({ formData, handleSituationSelect, handleSubmit }: an
 
     <div className="flex-1 space-y-3 mb-6 overflow-y-auto max-h-[60vh] pr-1 custom-scrollbar">
       {situationOptions.map((option, idx) => {
-        const isSelected = formData.specificSituation === option.id
+        // CAMBIO: specific_situation
+        const isSelected = formData.specific_situation === option.id
         return (
           <motion.button
             key={option.id}
@@ -207,7 +210,6 @@ const QuestionnaireStep = ({ formData, handleSituationSelect, handleSubmit }: an
             </div>
             
             <div className="flex-1">
-              {/* EDITADO: Tamaño de texto aumentado en las preguntas */}
               <p className={`text-base md:text-lg leading-snug transition-colors duration-300 ${isSelected ? 'text-[#001026] font-bold' : 'text-blue-100/90 font-medium'}`}>
                 {option.text}
               </p>
@@ -224,11 +226,12 @@ const QuestionnaireStep = ({ formData, handleSituationSelect, handleSubmit }: an
 
     <motion.button 
       onClick={handleSubmit} 
-      disabled={!formData.specificSituation}
-      whileHover={formData.specificSituation ? { scale: 1.02 } : {}}
-      whileTap={formData.specificSituation ? { scale: 0.98 } : {}}
+      // CAMBIO: specific_situation
+      disabled={!formData.specific_situation}
+      whileHover={formData.specific_situation ? { scale: 1.02 } : {}}
+      whileTap={formData.specific_situation ? { scale: 0.98 } : {}}
       className={`w-full py-4 rounded-xl font-bold tracking-wider uppercase text-sm shadow-lg transition-all duration-300
-        ${formData.specificSituation 
+        ${formData.specific_situation 
           ? 'bg-gradient-to-r from-[#B2904D] to-[#D4AF61] text-[#001026] shadow-[#B2904D]/20 cursor-pointer' 
           : 'bg-slate-800/30 text-slate-600 border border-white/5 cursor-not-allowed'}`}
     >
@@ -244,12 +247,10 @@ const SuccessStep = () => (
     animate={{ opacity: 1, scale: 1 }} 
     className="flex flex-col items-center justify-center text-center px-4 py-2 w-full max-w-2xl mx-auto h-full"
   >
-    {/* 2. Sección de LLAMADA CON LADA */}
     <div className="relative w-full mb-8 group mt-2">
       <div className="absolute inset-0 bg-[#B2904D]/10 blur-[60px] rounded-full pointer-events-none opacity-50" />
       
       <div className="relative bg-[#000510]/40 border border-[#B2904D]/20 rounded-3xl p-8 shadow-2xl overflow-hidden">
-          {/* Efecto de brillo */}
           <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] animate-[shimmer_4s_infinite]" />
 
           <motion.div 
@@ -281,7 +282,6 @@ const SuccessStep = () => (
       </div>
     </div>
 
-    {/* 3. Sección "Más Casos" */}
     <motion.div 
       initial={{ opacity: 0, y: 30 }} 
       animate={{ opacity: 1, y: 0 }} 
@@ -298,7 +298,6 @@ const SuccessStep = () => (
           <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B2904D]/30 to-[#F5D78E]/30 rounded-xl opacity-30 group-hover:opacity-80 transition duration-500 blur-sm"></div>
           <div className="relative bg-[#000814] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-white/5 transition-colors">
               
-              {/* EDITADO: Efecto NEON en Experiencias Reales (Sin comillas, sin cursiva) */}
               <h3 className="text-2xl md:text-4xl font-bold text-center text-white drop-shadow-[0_0_15px_rgba(178,144,77,0.6)] uppercase tracking-wide">
                 Experiencias Reales
               </h3>
@@ -344,7 +343,6 @@ const SubmittingStep = () => (
       <div className="loader-line-mask">
         <div className="loader-line"></div>
       </div>
-      {/* Logo centrado en el loader */}
       <img 
         src="/LogoInformacion.png" 
         alt="Manuel Solis" 
@@ -372,9 +370,17 @@ const ErrorStep = ({ setStep }: any) => (
 
 function InteractiveLandingFormContent() {
   const [step, setStep] = useState<Step>('form')
+  
+  // CAMBIO: Estado inicial con claves en snake_case
   const [formData, setFormData] = useState<FormData>({
-    first_name: '', last_name: '', phone: '', email: '',
-    inUSA: null, specificSituation: '', acceptedTerms: false, marketingConsent: false
+    first_name: '', 
+    last_name: '', 
+    phone: '', 
+    email: '',
+    in_usa: null,              // Antes: inUSA
+    specific_situation: '',    // Antes: specificSituation
+    accepted_terms: false,     // Antes: acceptedTerms
+    marketing_consent: false   // Antes: marketingConsent
   })
   
   // URL Params manual
@@ -393,10 +399,17 @@ function InteractiveLandingFormContent() {
   }
 
   const handleSituationSelect = (situationId: string) => {
-    setFormData(prev => ({ ...prev, specificSituation: situationId }))
+    // CAMBIO: specific_situation
+    setFormData(prev => ({ ...prev, specific_situation: situationId }))
   }
 
-  const validateStep1 = () => formData.first_name && formData.last_name && formData.phone && formData.email && formData.acceptedTerms
+  // CAMBIO: Validación con claves snake_case
+  const validateStep1 = () => 
+    formData.first_name && 
+    formData.last_name && 
+    formData.phone && 
+    formData.email && 
+    formData.accepted_terms
 
   const handleNextStep = () => { 
     if (validateStep1()) {
@@ -404,9 +417,10 @@ function InteractiveLandingFormContent() {
     }
   }
 
-  const handleLocationResponse = (inUSA: boolean) => {
-    setFormData(prev => ({ ...prev, inUSA }))
-    if (inUSA) {
+  // CAMBIO: Clave in_usa
+  const handleLocationResponse = (in_usa: boolean) => {
+    setFormData(prev => ({ ...prev, in_usa }))
+    if (in_usa) {
       setStep('questionnaire')
     } else {
       setStep('disqualified')
@@ -414,7 +428,8 @@ function InteractiveLandingFormContent() {
   }
 
   const handleSubmit = async () => {
-    if (!formData.specificSituation) return
+    // CAMBIO: specific_situation
+    if (!formData.specific_situation) return
     setStep('submitting')
 
     // MOCK API SUCCESS ALWAYS (Simulación 2 segundos)
@@ -434,7 +449,10 @@ function InteractiveLandingFormContent() {
         utm_term: getParam('utm_term') || ''
       }
       
-      const situationLabel = situationOptions.find(s => s.id === formData.specificSituation)?.text || formData.specificSituation
+      // CAMBIO: Buscar texto basado en specific_situation
+      const situationLabel = situationOptions.find(s => s.id === formData.specific_situation)?.text || formData.specific_situation
+      
+      // El payload ahora tendrá todas las claves en snake_case automáticamente
       const payload = { ...formData, ...utmData, situation: situationLabel }
       
       fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
