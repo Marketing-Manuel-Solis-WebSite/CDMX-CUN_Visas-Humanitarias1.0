@@ -240,91 +240,141 @@ const QuestionnaireStep = ({ formData, handleSituationSelect, handleSubmit }: an
   </motion.div>
 )
 
-const SuccessStep = () => (
-  <motion.div 
-    key="success-step"
-    initial={{ opacity: 0, scale: 0.9 }} 
-    animate={{ opacity: 1, scale: 1 }} 
-    className="flex flex-col items-center justify-center text-center px-4 py-2 w-full max-w-2xl mx-auto h-full"
-  >
-    <div className="relative w-full mb-8 group mt-2">
-      <div className="absolute inset-0 bg-[#B2904D]/10 blur-[60px] rounded-full pointer-events-none opacity-50" />
-      
-      <div className="relative bg-[#000510]/40 border border-[#B2904D]/20 rounded-3xl p-8 shadow-2xl overflow-hidden">
-          <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] animate-[shimmer_4s_infinite]" />
+// --- ANIMACIÓN DE ENTRADA (NUEVO) ---
+const SuccessAnimation = ({ onComplete }: { onComplete: () => void }) => {
+  useEffect(() => {
+    // Espera a que termine la animación (aprox 2.5s) para mostrar el contenido
+    const timer = setTimeout(onComplete, 2500)
+    return () => clearTimeout(timer)
+  }, [onComplete])
 
-          <motion.div 
-              animate={{ 
-                  scale: [1, 1.05, 1],
-                  rotate: [0, -3, 3, -3, 0]
-              }}
-              transition={{ repeat: Infinity, repeatDelay: 2, duration: 1 }}
-              className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[#B2904D] to-[#F5D78E] flex items-center justify-center mb-6 shadow-xl shadow-[#B2904D]/30 relative z-10 border-4 border-[#001026]"
-          >
-              <PhoneIncoming size={36} className="text-[#001026]" />
-          </motion.div>
-
-          <h2 className="text-xl md:text-3xl font-light text-white mb-2 relative z-10">
-              EN BREVE RECIBIRÁS UNA LLAMADA
-          </h2>
-          <p className="text-blue-100/60 text-xs md:text-sm mb-6 uppercase tracking-widest relative z-10 font-medium">Por favor contesta al número que empiece con:</p>
-          
-          <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3, type: "spring" }}
-              className="inline-block relative z-10"
-          >
-              <span className="relative block text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-[#FFF] to-[#B2904D] drop-shadow-[0_0_25px_rgba(178,144,77,0.5)] tracking-tighter">
-                  +1 713
-              </span>
-          </motion.div>
-      </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+      {/* Fondo verde que se contrae */}
+      <motion.div
+        initial={{ width: '150vw', height: '150vh', borderRadius: 0 }}
+        animate={{
+          width: '90px',
+          height: '90px',
+          borderRadius: '50%',
+          transition: { delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+        }}
+        exit={{ scale: 0, opacity: 0 }}
+        className="bg-emerald-500 flex items-center justify-center shadow-2xl relative"
+      >
+        {/* Checkmark que aparece */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1, transition: { delay: 1.2, duration: 0.4, type: "spring" } }}
+        >
+          <CheckCircle2 size={48} className="text-white" strokeWidth={3} />
+        </motion.div>
+      </motion.div>
     </div>
+  )
+}
 
-    <motion.div 
-      initial={{ opacity: 0, y: 30 }} 
-      animate={{ opacity: 1, y: 0 }} 
-      transition={{ delay: 0.6 }}
-      className="w-full flex flex-col items-center"
-    >
-      <div className="flex items-center gap-4 mb-6 opacity-30 w-full max-w-sm">
-          <div className="h-px flex-1 bg-white" />
-          <Star size={10} className="text-[#B2904D]" />
-          <div className="h-px flex-1 bg-white" />
-      </div>
+// --- PASO DE ÉXITO (MODIFICADO) ---
+const SuccessStep = () => {
+  const [showContent, setShowContent] = useState(false)
 
-      <div className="relative group w-full max-w-lg">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B2904D]/30 to-[#F5D78E]/30 rounded-xl opacity-30 group-hover:opacity-80 transition duration-500 blur-sm"></div>
-          <div className="relative bg-[#000814] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-white/5 transition-colors">
-              
-              <h3 className="text-2xl md:text-4xl font-bold text-center text-white drop-shadow-[0_0_15px_rgba(178,144,77,0.6)] uppercase tracking-wide">
-                Experiencias Reales
-              </h3>
-              
-              <p className="text-blue-100/50 text-sm text-center max-w-xs">
-                Resultados comprobados que cambian vidas.
-              </p>
+  return (
+    <div className="relative w-full h-full flex flex-col items-center justify-center">
+      <AnimatePresence>
+        {!showContent && (
+          <SuccessAnimation onComplete={() => setShowContent(true)} />
+        )}
+      </AnimatePresence>
 
-              <a 
-                  href="https://testimonios-woad.vercel.app/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full"
-              >
-                  <motion.button 
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white text-[#001026] font-bold text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] transition-all"
-                  >
-                      VER HISTORIAS <ExternalLink size={14} />
-                  </motion.button>
-              </a>
+      {showContent && (
+        <motion.div 
+          key="success-step-content"
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center justify-center text-center px-4 py-2 w-full max-w-2xl mx-auto h-full"
+        >
+          <div className="relative w-full mb-8 group mt-2">
+            <div className="absolute inset-0 bg-[#B2904D]/10 blur-[60px] rounded-full pointer-events-none opacity-50" />
+            
+            <div className="relative bg-[#000510]/40 border border-[#B2904D]/20 rounded-3xl p-8 shadow-2xl overflow-hidden">
+                <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] animate-[shimmer_4s_infinite]" />
+
+                <motion.div 
+                    animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: [0, -3, 3, -3, 0]
+                    }}
+                    transition={{ repeat: Infinity, repeatDelay: 2, duration: 1 }}
+                    className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[#B2904D] to-[#F5D78E] flex items-center justify-center mb-6 shadow-xl shadow-[#B2904D]/30 relative z-10 border-4 border-[#001026]"
+                >
+                    <PhoneIncoming size={36} className="text-[#001026]" />
+                </motion.div>
+
+                <h2 className="text-xl md:text-3xl font-light text-white mb-2 relative z-10">
+                    EN BREVE RECIBIRÁS UNA LLAMADA
+                </h2>
+                <p className="text-blue-100/60 text-xs md:text-sm mb-6 uppercase tracking-widest relative z-10 font-medium">Por favor contesta al número que empiece con:</p>
+                
+                <motion.div 
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="inline-block relative z-10"
+                >
+                    <span className="relative block text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-[#FFF] to-[#B2904D] drop-shadow-[0_0_25px_rgba(178,144,77,0.5)] tracking-tighter">
+                        +1 713
+                    </span>
+                </motion.div>
+            </div>
           </div>
-      </div>
-    </motion.div>
-  </motion.div>
-)
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.6 }}
+            className="w-full flex flex-col items-center"
+          >
+            <div className="flex items-center gap-4 mb-6 opacity-30 w-full max-w-sm">
+                <div className="h-px flex-1 bg-white" />
+                <Star size={10} className="text-[#B2904D]" />
+                <div className="h-px flex-1 bg-white" />
+            </div>
+
+            <div className="relative group w-full max-w-lg">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B2904D]/30 to-[#F5D78E]/30 rounded-xl opacity-30 group-hover:opacity-80 transition duration-500 blur-sm"></div>
+                <div className="relative bg-[#000814] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-white/5 transition-colors">
+                    
+                    <h3 className="text-2xl md:text-4xl font-bold text-center text-white drop-shadow-[0_0_15px_rgba(178,144,77,0.6)] uppercase tracking-wide">
+                      Experiencias Reales
+                    </h3>
+                    
+                    <p className="text-blue-100/50 text-sm text-center max-w-xs">
+                      Resultados comprobados que cambian vidas.
+                    </p>
+
+                    <a 
+                        href="https://testimonios-woad.vercel.app/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-full"
+                    >
+                        <motion.button 
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white text-[#001026] font-bold text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] transition-all"
+                        >
+                            VER HISTORIAS <ExternalLink size={14} />
+                        </motion.button>
+                    </a>
+                </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </div>
+  )
+}
 
 const DisqualifiedStep = () => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center min-h-[400px] text-center px-4 max-w-lg mx-auto">
