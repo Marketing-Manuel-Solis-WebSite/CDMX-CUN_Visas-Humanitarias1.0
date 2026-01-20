@@ -11,7 +11,8 @@ import {
 } from 'lucide-react'
 
 // --- CONSTANTES Y CONFIGURACIÓN ---
-const API_URL = '/api/landing-contact'
+// CORRECCIÓN PRINCIPAL: Cambiado de '/api/landing-contact' a '/api/lead/capture'
+const API_URL = '/api/lead/capture'
 
 // Definimos los pasos del flujo
 type Step = 'form' | 'location' | 'questionnaire' | 'submitting' | 'success' | 'error' | 'disqualified'
@@ -478,17 +479,9 @@ function InteractiveLandingFormContent() {
   }
 
   const handleSubmit = async () => {
-    // CAMBIO: specific_situation
     if (!formData.specific_situation) return
     setStep('submitting')
 
-    // MOCK API SUCCESS ALWAYS (Simulación 2 segundos)
-    setTimeout(() => {
-        trackConversionEvents()
-        setStep('success')
-    }, 2000)
-
-    // Intento real (silencioso)
     try {
       const getParam = (key: string) => urlParams?.get(key) || ''
       const utmData = {
@@ -499,16 +492,29 @@ function InteractiveLandingFormContent() {
         utm_term: getParam('utm_term') || ''
       }
       
-      // CAMBIO: Buscar texto basado en specific_situation
       const situationLabel = situationOptions.find(s => s.id === formData.specific_situation)?.text || formData.specific_situation
       
-      // El payload ahora tendrá todas las claves en snake_case automáticamente
       const payload = { ...formData, ...utmData, situation: situationLabel }
       
-      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
-        .catch(err => console.log("Envío API background:", err))
+      // CAMBIO IMPORTANTE: Esperamos la respuesta real del servidor
+      const response = await fetch(API_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      })
+
+      if (response.ok) {
+        trackConversionEvents()
+        setStep('success')
+      } else {
+        console.error('Error del servidor:', await response.text())
+        setStep('error')
+      }
         
-    } catch (error) { console.error(error) }
+    } catch (error) { 
+      console.error(error)
+      setStep('error')
+    }
   }
 
   const trackConversionEvents = () => {
