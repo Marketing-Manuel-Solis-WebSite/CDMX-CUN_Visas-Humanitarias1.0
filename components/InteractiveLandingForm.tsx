@@ -86,7 +86,7 @@ const FormStep = ({ formData, handleChange, handleNextStep, validateStep1 }: any
         <span className="text-[#B2904D] text-xs font-bold tracking-wider uppercase">Evaluación Gratuita</span>
       </motion.div>
       <h2 className="text-2xl md:text-3xl font-light text-white mb-2">
-        Arregle sin salir
+        ARREGLE SIN SALIR
       </h2>
       <p className="text-blue-100/60 text-sm">Llena el formulario para mas información</p>
     </div>
