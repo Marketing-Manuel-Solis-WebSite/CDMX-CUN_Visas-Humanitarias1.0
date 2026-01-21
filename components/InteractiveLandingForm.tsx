@@ -484,12 +484,14 @@ function InteractiveLandingFormContent() {
 
     try {
       const getParam = (key: string) => urlParams?.get(key) || ''
+      
+      // CAMBIO: Configuración de UTMs según requerimientos
       const utmData = {
-        utm_source: getParam('utm_source') || 'SITIO WEB',
-        utm_medium: getParam('utm_medium') || 'Organico',
-        utm_campaign: getParam('utm_campaign') || 'Directo',
-        utm_content: getParam('utm_content') || '',
-        utm_term: getParam('utm_term') || ''
+        utm_source: 'Youtube', // Requerimiento explícito: siempre "Youtube"
+        utm_medium: getParam('utm_medium'), // Automático por URL (sin default fijo)
+        utm_campaign: getParam('utm_campaign'), // Automático por URL
+        utm_content: getParam('utm_content'), // Automático por URL
+        utm_term: getParam('utm_term') // Automático por URL
       }
       
       const situationLabel = situationOptions.find(s => s.id === formData.specific_situation)?.text || formData.specific_situation
