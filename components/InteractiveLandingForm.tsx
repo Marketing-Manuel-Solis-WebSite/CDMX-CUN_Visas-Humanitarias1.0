@@ -83,7 +83,7 @@ const FormStep = ({ formData, handleChange, handleNextStep, validateStep1 }: any
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#B2904D]/10 border border-[#B2904D]/20 mb-3">
         <Sparkles size={14} className="text-[#B2904D]" />
-        <span className="text-[#B2904D] text-xs font-bold tracking-wider uppercase">Evaluación Gratuita</span>
+        <span className="text-[#B2904D] text-xs font-bold tracking-wider uppercase">Descubre si precalificas</span>
       </motion.div>
       <h2 className="text-2xl md:text-3xl font-light text-white mb-2">
         ARREGLE SIN SALIR
